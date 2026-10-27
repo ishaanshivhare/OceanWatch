@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model HazardReport {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  hazardType  String   // e.g. "Oil Spill", "Algal Bloom", "Rogue Wave", "Marine Life Stranding", "Coastal Flooding", "Plastic Debris"
+  severity    String   // "Low", "Medium", "High", "Critical"
+  latitude    Float
+  longitude   Float
+  locationName String?
+  source      String   @default("crowdsourced") // "crowdsourced" or "incois"
+  userId      String?
+  userName    String?
+  status      String   @default("ACTIVE") // "ACTIVE", "VERIFIED", "INVESTIGATING", "RESOLVED"
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([severity])
+  @@index([hazardType])
+  @@index([createdAt])
+}
